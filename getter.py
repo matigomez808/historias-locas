@@ -35,6 +35,7 @@ else:
 
 document = urlopen(starturl, context = ctx)
 html = document.read()
+# No me estaria saliendo crear un archivo html como dios manda. Volver a chequear a dr Chuck
 
 soup = BeautifulSoup(html, 'html.parser')
 stuff = html.decode()
