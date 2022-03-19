@@ -42,6 +42,7 @@ link = urllib.request.urlopen(starturl, context = ctx)
 html = link.read()
 
 soup = BeautifulSoup(html, 'html.parser')
+tags = soup.find_all("text-align: left;")
 pretty = soup.prettify()
 text = soup.get_text()
 
