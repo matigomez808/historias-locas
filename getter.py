@@ -5,13 +5,15 @@ from urllib.parse import urljoin
 from urllib.parse import urlparse
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+import codecs
+import re
 
 # Ignore SSL cetificate errors
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
 
 
-conn = sqlite3.connect ('spider.sqlite')
+conn = sqlite3.connect ('Cuentos.sqlite')
 cur = conn.cursor()
 
 cur.execute('''CREATE TABLE IF NOT EXISTS Cuentos
@@ -30,24 +32,48 @@ else:
     starturl = input('Enter web url or enter:')
     # Link por default
     if len(starturl) < 1:
-        starturl = 'https://www.eldiario.es/madrid/somos/malasana/diez-microrrelatos-de-terror_1_6421787.html'
+        starturl = 'https://www.actualidadliteratura.com/los-mejores-microrrelatos-la-historia/'
 
+            # Esto crea un pretty html del target
+        urllib.request.urlretrieve(starturl, 'site.html')
 
-document = urlopen(starturl, context = ctx)
-html = document.read()
-# No me estaria saliendo crear un archivo html como dios manda. Volver a chequear a dr Chuck
+        # No se si puedo usar BS con el '.html'
+link = urllib.request.urlopen(starturl, context = ctx)
+html = link.read()
 
 soup = BeautifulSoup(html, 'html.parser')
-stuff = html.decode()
+pretty = soup.prettify()
+text = soup.get_text()
 
-
-
-fh = open('10_microrrelatos.html', 'w')
-fh.write(stuff)
+fh = open('sitio.html', 'w', encoding = 'utf_8')
+fh.write (pretty)
 fh.close()
 
 
+fh = open('texto.txt', 'w', encoding = 'utf_8')
+file = fh.write(text)
+fh.close()
+# text = text.rstrip()
+#             # Este loop aun no funciona creo. RegEx
+# for x in text:
+#     if len(x) == 0: continue
+#     res = re.search('/[0-9.] ', x)
+#     if res == None: continue
+#     print (res)
 
-#print (soup)
-print (starturl, 'All done! C-ya!')
+            # Ya tengo todo el texto de la pagina en un archivo local.
+
+    # Ahora capturo los cuentos
+
+# fh = open('texto.txt', encoding = 'utf_8')
+#
+#
+# for line in fh:
+#     if len(line) < 1: continue
+#     line = line.strip()
+#     line = re.findall('/[0-9.] ',line)
+#
+
+
+print (starturl + '\n' + 'Learning most definitly not all done... yet! C-ya!')
 cur.close()
