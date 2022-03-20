@@ -9,7 +9,7 @@
 from bs4 import BeautifulSoup
 
 
-conn =
+#conn =
 
 with open('sitio.html', 'r', encoding = 'utf_8') as fileh:
     doc = fileh.read()
